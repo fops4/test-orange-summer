@@ -1,5 +1,3 @@
-// script.js
-
 document.addEventListener('DOMContentLoaded', () => {
     const taskForm = document.getElementById('task-form');
     const taskList = document.getElementById('task-list');
@@ -19,7 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const taskDesc = document.getElementById('task-desc').value;
         const taskDeadline = document.getElementById('task-deadline').value;
 
-        // Vérifier que la date n'est pas antérieure à aujourd'hui
         if (taskDeadline < today) {
             showMessage('La date limite ne peut pas être antérieure à aujourd\'hui', 'error');
             return;
