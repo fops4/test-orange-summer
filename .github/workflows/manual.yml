@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'  # Spécifiez la version de Node.js
+          node-version: '18'  # Mettez à jour vers une version prise en charge
 
       - name: Install dependencies
         run: npm install
@@ -34,5 +34,5 @@ jobs:
           subject: 'Code Analysis Results'
           body: 'The code analysis has been completed. Please check the results in the Actions tab.'
           to: ${{ github.actor_email }}  # Email de l'utilisateur qui a fait le push
-          from: ${{ secrets.EMAIL_USERNAME }}  # Email de l'émetteur (doit être configuré dans les secrets)
+          from: ${{ secrets.EMAIL_USERNAME }}  # Email de l'émetteur
           secure: true
