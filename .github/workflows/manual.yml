@@ -3,7 +3,7 @@ name: Code Analysis and Notification
 on:
   push:
     branches:
-      - '**'  # Match all branches
+      - '**'  # Match all branches 
 
 jobs:
   analyze:
