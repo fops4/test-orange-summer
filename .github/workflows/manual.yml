@@ -27,7 +27,7 @@ jobs:
       - name: Send email notification
         uses: dawidd6/action-send-mail@v3
         with:
-          server_address: smtp.example.com  # Remplacez par votre serveur SMTP
+          server_address: smtp.gmail.com  # Serveur SMTP pour Gmail
           server_port: 587  # Port SMTP (587 pour TLS)
           username: ${{ secrets.EMAIL_USERNAME }}  # Utilisateur SMTP
           password: ${{ secrets.EMAIL_PASSWORD }}  # Mot de passe SMTP
