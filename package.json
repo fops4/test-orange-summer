@@ -13,7 +13,7 @@
   },
   "build": {
     "appId": "com.example.myapp",
-    "productName": "MyElectronApp",
+    "productName": "Todo_Fops",
     "mac": {
       "target": "dmg"
     },
