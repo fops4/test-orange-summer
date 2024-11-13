@@ -1,41 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau de Bord des Tâches</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Bienvenue</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f0f2f5;
+        }
+
+        .welcome-container {
+            text-align: center;
+            padding: 40px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        .login-button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .login-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>Gestionnaire de Tâches</h1>
-    </header>
-    <main>
-        <div id="success-message" style="display: none;"></div>
+    <div class="welcome-container">
+        <h1>Bienvenue sur Notre Site</h1>
+        <p>Commencez votre parcours en vous connectant.</p>
+        <button class="login-button" onclick="handleLogin()">Connexion</button>
+    </div>
 
-        <form id="task-form">
-            <h2>Ajouter une tâche</h2>
-            <label for="task-name">Nom de la tâche</label>
-            <input type="text" id="task-name" name="task-name" required>
-            
-            <label for="task-desc">Description</label>
-            <input type="text" id="task-desc" name="task-desc" required>
-            
-            <label for="task-deadline">Date limite</label>
-            <input type="date" id="task-deadline" name="task-deadline" required>
-            
-            <button type="submit">Ajouter la tâche</button>
-        </form>
-        <h2>Liste des tâches</h2>
-        <div id="task-list">
-            
-        </div>
-    </main>
     <script>
-        // Définir la date minimale 
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('task-deadline').setAttribute('min', today);
+        // Fonction JavaScript pour gérer le clic du bouton de connexion
+        function handleLogin() {
+            window.location.href = 'login.html';
+        }
     </script>
-    <script src="script.js"></script>
 </body>
 </html>

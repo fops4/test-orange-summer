@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voyages en Bus - Connexion & Inscription</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            display: flex;
+            width: 900px;
+            height: 500px;
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container {
+            display: flex;
+            width: 100%;
+        }
+
+        .info-side {
+            width: 50%;
+            background: linear-gradient(to bottom, #78c1a3, #3fbbc0);
+            color: #fff;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .info-side h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .info-side p {
+            font-size: 16px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        #toggleBtn {
+            padding: 10px 20px;
+            background-color: #fff;
+            color: #3fbbc0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .form-content {
+            width: 50%;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form {
+            display: none;
+            flex-direction: column;
+        }
+
+        .form.active {
+            display: flex;
+        }
+
+        .form h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+
+        .form-group input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        .form-group a {
+            color: #3fbbc0;
+            text-decoration: none;
+        }
+
+        .form-group a:hover {
+            text-decoration: underline;
+        }
+
+        .form-button {
+            padding: 10px;
+            background-color: #3fbbc0;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .form-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <div class="info-side">
+                <h2>Bienvenue sur</h2>
+                <h1>Horizon Sans Fin</h1>
+                <p>Réservez vos billets de bus et gérez vos déplacements facilement.</p>
+            </div>
+
+            <div class="form-content">
+                <!-- Formulaire de Connexion -->
+                <form id="loginForm" class="form active">
+                    <h2>Connexion à votre compte</h2>
+                    <div class="form-group">
+                        <label for="loginEmail">Adresse e-mail</label>
+                        <input type="email" id="loginEmail" placeholder="Entrez votre email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Mot de passe</label>
+                        <input type="password" id="loginPassword" placeholder="Entrez votre mot de passe" required>
+                    </div>
+                    <div class="form-group">
+                        <a href="#" id="forgotPasswordLink">Mot de passe oublié ?</a>
+                    </div>
+                    <button type="submit" class="form-button">Se connecter</button><br/>
+                    <button type="button" class="form-button" id="toggleRegisterBtn">S'inscrire</button>
+                </form>
+
+                <!-- Formulaire d'Inscription -->
+                <form id="registerForm" class="form">
+                    <h2>Créer un compte</h2>
+                    <div class="form-group">
+                        <label for="name">Nom complet</label>
+                        <input type="text" id="name" placeholder="Entrez votre nom" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Adresse e-mail</label>
+                        <input type="email" id="email" placeholder="Entrez votre email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Mot de passe</label>
+                        <input type="password" id="password" placeholder="Entrez votre mot de passe" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms">J'accepte les <a href="#">conditions générales</a></label>
+                    </div>
+                    <button type="submit" class="form-button">S'inscrire</button><br/>
+                    <button type="button" class="form-button" id="toggleLoginBtn">Se connecter</button>
+                </form>
+
+                <!-- Formulaire Mot de Passe Oublié -->
+                <form id="forgotPasswordForm" class="form">
+                    <h2>Réinitialiser le mot de passe</h2>
+                    <div class="form-group">
+                        <label for="resetEmail">Adresse e-mail</label>
+                        <input type="email" id="resetEmail" placeholder="Entrez votre email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Mot de passe</label>
+                        <input type="password" id="password" placeholder="Entrez votre nouveau mot de passe" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Confirmer</label>
+                        <input type="password" id="cpassword" placeholder="Entrez encore votre mot de passe" required>
+                    </div>
+                    <button type="submit" class="form-button">Réinitialiser</button><br/>
+                    <button type="button" class="form-button" id="toggleLoginBtnFromForgot">Se connecter</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const backendUrl = 'http://localhost:3000'; // Remplacez par votre URL de backend si différent
+    
+        // Variables pour les boutons de bascule
+        const toggleRegisterBtn = document.getElementById("toggleRegisterBtn");
+        const toggleLoginBtn = document.getElementById("toggleLoginBtn");
+        const toggleLoginBtnFromForgot = document.getElementById("toggleLoginBtnFromForgot");
+        const forgotPasswordLink = document.getElementById("forgotPasswordLink");
+    
+        // Formulaires
+        const loginForm = document.getElementById("loginForm");
+        const registerForm = document.getElementById("registerForm");
+        const forgotPasswordForm = document.getElementById("forgotPasswordForm");
+    
+        // Fonction pour basculer vers le formulaire d'inscription
+        toggleRegisterBtn.addEventListener("click", function() {
+            loginForm.classList.remove("active");
+            registerForm.classList.add("active");
+            forgotPasswordForm.classList.remove("active");
+        });
+    
+        // Fonction pour basculer vers le formulaire de connexion depuis l'inscription
+        toggleLoginBtn.addEventListener("click", function() {
+            registerForm.classList.remove("active");
+            loginForm.classList.add("active");
+            forgotPasswordForm.classList.remove("active");
+        });
+    
+        // Fonction pour basculer vers le formulaire de mot de passe oublié
+        forgotPasswordLink.addEventListener("click", function(event) {
+            event.preventDefault();
+            loginForm.classList.remove("active");
+            registerForm.classList.remove("active");
+            forgotPasswordForm.classList.add("active");
+        });
+    
+        // Fonction pour basculer vers le formulaire de connexion depuis le mot de passe oublié
+        toggleLoginBtnFromForgot.addEventListener("click", function() {
+            forgotPasswordForm.classList.remove("active");
+            loginForm.classList.add("active");
+        });
+    
+        // Fonction pour gérer l'envoi des données
+        async function submitForm(endpoint, data) {
+            try {
+                const response = await fetch(`${backendUrl}${endpoint}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+    
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    alert(errorData.error || 'Une erreur est survenue');
+                    return;
+                }
+    
+                const result = await response.json();
+                window.location.href = 'test.html';
+            } catch (error) {
+                console.error('Erreur réseau:', error);
+                alert('Erreur réseau, veuillez réessayer.');
+            }
+        }
+    
+        // Gestion de l'envoi du formulaire de connexion
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            submitForm('/login', { email, password });
+        });
+    
+        // Gestion de l'envoi du formulaire d'inscription
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            submitForm('/register', { name, email, password });
+        });
+    
+        // Gestion de l'envoi du formulaire de réinitialisation du mot de passe
+        document.getElementById('forgotPasswordForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const email = document.getElementById('resetEmail').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('cpassword').value;
+    
+            if (newPassword !== confirmPassword) {
+                alert('Les mots de passe ne correspondent pas');
+                return;
+            }
+    
+            submitForm('/reset-password', { email, newPassword });
+        });
+    </script>
+    
+</body>
+</html>
