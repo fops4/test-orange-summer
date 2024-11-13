@@ -1,0 +1,38 @@
+name: Code Analysis and Notification
+
+on:
+  push:
+    branches:
+      - '**'  # Match all branches 
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'  # Mettez à jour vers une version prise en charge
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run ESLint
+        run: npm run lint  # Assurez-vous d'avoir un script lint dans votre package.json
+
+      - name: Send email notification
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com  # Serveur SMTP pour Gmail
+          server_port: 587  # Port SMTP (587 pour TLS)
+          username: ${{ secrets.EMAIL_USERNAME }}  # Utilisateur SMTP
+          password: ${{ secrets.EMAIL_PASSWORD }}  # Mot de passe SMTP
+          subject: 'Code Analysis Results'
+          body: 'The code analysis has been completed. Please check the results in the Actions tab.'
+          to: ${{ github.actor_email }}  # Email de l'utilisateur qui a fait le push
+          from: ${{ secrets.EMAIL_USERNAME }}  # Email de l'émetteur
+          secure: true
