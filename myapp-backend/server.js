@@ -20,9 +20,13 @@ const db = mysql.createConnection({
 
 // Connexion à la base de données
 db.connect((err) => {
-  if (err) throw err;
+  if (err) {
+    console.error('Erreur de connexion à la base de données:', err); // Ajoutez un log pour les erreurs
+    throw err; // Lancer l'erreur si la connexion échoue
+  }
   console.log('Connecté à la base de données MySQL');
 });
+
 
 // Middleware pour traiter les requêtes JSON
 app.use(express.json());
