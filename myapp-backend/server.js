@@ -6,11 +6,10 @@ const cors = require('cors');
 const port = 3000;
 
 // Configurer CORS pour accepter les requêtes de votre frontend
-app.use(cors({
-    origin: 'http://127.0.0.1:5500' // Remplacez par l'URL de votre frontend si nécessaire
-}));
-
+// Middleware CORS avec options spécifiques (si nécessaire)
+app.use(cors());
 // Configuration de la base de données
+
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',      // remplacez par votre nom d'utilisateur MySQL
