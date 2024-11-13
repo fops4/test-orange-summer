@@ -40,9 +40,7 @@ loginForm.addEventListener('submit', async (e) => {
         });
 
         if (response.ok) {
-            alert('Connexion réussie');
-            // Rediriger l'utilisateur vers la page d'accueil ou une autre page après connexion
-            window.location.href = '/home';
+            window.location.href = '../task/index.html';
         } else {
             const errorData = await response.json();
             alert('Échec de la connexion : ' + (errorData.message || 'Erreur inconnue'));
@@ -75,8 +73,7 @@ registerForm.addEventListener('submit', async (e) => {
         });
 
         if (response.ok) {
-            alert('Inscription réussie');
-            showForm(loginForm); // Affiche le formulaire de connexion
+            window.location.href = '../task/index.html';
         } else {
             const errorData = await response.json();
             alert('Échec de l\'inscription : ' + (errorData.message || 'Erreur inconnue'));
@@ -108,8 +105,7 @@ forgotPasswordForm.addEventListener('submit', async (e) => {
         });
 
         if (response.ok) {
-            alert('Réinitialisation du mot de passe réussie');
-            showForm(loginForm); // Affiche le formulaire de connexion
+            window.location.href = 'index.html';
         } else {
             const errorData = await response.json();
             alert('Échec de la réinitialisation du mot de passe : ' + (errorData.message || 'Erreur inconnue'));
