@@ -1,5 +1,6 @@
 // Définir l'URL du backend (à adapter selon l'environnement : local ou production)
-const backendUrl = 'http://localhost:3000'; // Remplacez par l'URL du backend, par exemple 'http://localhost:3000' en local
+const backendUrl = 'http://localhost:3000'; // Changez par l'URL de votre backend en production
+let authToken = null; // Variable pour stocker le token d'authentification
 
 // Sélection des éléments des formulaires
 const loginForm = document.getElementById('loginForm');
@@ -31,16 +32,17 @@ loginForm.addEventListener('submit', async (e) => {
     const password = document.getElementById('loginPassword').value;
 
     try {
-        const response = await fetch(`${backendUrl}/login`, {
+        const response = await fetch(`${backendUrl}/api/login`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
         });
 
         if (response.ok) {
-            window.location.href = '../task/index.html';
+            const data = await response.json();
+            authToken = data.token;
+            localStorage.setItem('authToken', authToken); // Stocker le token
+            window.location.href = '../task/index.html'; // Redirige vers la page d'accueil
         } else {
             const errorData = await response.json();
             alert('Échec de la connexion : ' + (errorData.message || 'Erreur inconnue'));
@@ -64,11 +66,9 @@ registerForm.addEventListener('submit', async (e) => {
     }
 
     try {
-        const response = await fetch(`${backendUrl}/register`, {
+        const response = await fetch(`${backendUrl}/api/register`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, email, password })
         });
 
@@ -96,15 +96,14 @@ forgotPasswordForm.addEventListener('submit', async (e) => {
     }
 
     try {
-        const response = await fetch(`${backendUrl}/reset-password`, {
+        const response = await fetch(`${backendUrl}/api/reset-password`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, newPassword })
         });
 
         if (response.ok) {
+            alert('Mot de passe réinitialisé avec succès');
             window.location.href = 'index.html';
         } else {
             const errorData = await response.json();
@@ -114,3 +113,10 @@ forgotPasswordForm.addEventListener('submit', async (e) => {
         alert('Erreur de connexion au serveur');
     }
 });
+
+// Fonction pour déconnecter l'utilisateur
+function logout() {
+    authToken = null;
+    localStorage.removeItem('authToken');
+    window.location.href = 'index.html'; // Redirige vers la page de connexion
+}

@@ -1,93 +1,117 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const taskForm = document.getElementById('task-form');
-    const taskList = document.getElementById('task-list');
-    const successMessage = document.getElementById('success-message');
+const backendUrl = 'http://localhost:3000'; // Changez par l'URL de votre backend en production
+let authToken = null; // Variable pour stocker le token d'authentification
 
-    // Définir la date minimale pour l'input date
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('task-deadline').setAttribute('min', today);
+// Fonction pour récupérer les informations de l'utilisateur connecté
+async function fetchUserData() {
+    authToken = localStorage.getItem('authToken'); // Récupérer le token stocké dans le localStorage
+    if (!authToken) {
+        alert("Veuillez vous connecter");
+        window.location.href = 'index.html'; // Redirige vers la page de connexion si l'utilisateur n'est pas connecté
+        return;
+    }
 
-    // Charger les tâches du stockage local
-    loadTasksFromLocalStorage();
+    try {
+        // Envoi du token dans l'en-tête d'autorisation
+        const response = await fetch(`${backendUrl}/api/user`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}` // Envoi du token dans l'en-tête
+            }
+        });
 
-    taskForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const taskName = document.getElementById('task-name').value;
-        const taskDesc = document.getElementById('task-desc').value;
-        const taskDeadline = document.getElementById('task-deadline').value;
-
-        if (taskDeadline < today) {
-            showMessage('La date limite ne peut pas être antérieure à aujourd\'hui', 'error');
-            return;
-        }
-
-        if (taskName && taskDesc && taskDeadline) {
-            addTaskToLocalStorage(taskName, taskDesc, taskDeadline);
+        if (response.ok) {
+            const userData = await response.json();
+            displayUserInfo(userData); // Appel de la fonction pour afficher les informations utilisateur
         } else {
-            showMessage('Veuillez remplir tous les champs', 'error');
+            alert('Échec de la récupération des informations utilisateur');
+        }
+    } catch (error) {
+        alert('Erreur de connexion au serveur');
+    }
+}
+
+// Fonction pour afficher les informations de l'utilisateur dans le header
+function displayUserInfo(userData) {
+    const userInfoElement = document.getElementById('user-info');
+    if (userData && userData.name) {
+        userInfoElement.innerHTML = `Bienvenue, ${userData.name}`; // Afficher le nom de l'utilisateur
+    } else {
+        userInfoElement.innerHTML = 'Utilisateur non trouvé';
+    }
+}
+
+// Fonction pour charger les tâches de l'utilisateur depuis la base de données
+async function loadTasks() {
+    const response = await fetch(`${backendUrl}/api/tasks`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}` // Envoi du token dans l'en-tête
         }
     });
 
-    function loadTasksFromLocalStorage() {
-        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    if (response.ok) {
+        const tasks = await response.json();
+        const taskListElement = document.getElementById('task-list');
+        taskListElement.innerHTML = ''; // Vider la liste des tâches existantes
+
         tasks.forEach(task => {
-            addTaskToDOM(task.name, task.desc, task.deadline, task.id);
+            const taskElement = document.createElement('div');
+            taskElement.innerHTML = `
+                <h3>${task.name}</h3>
+                <p>${task.description}</p>
+                <p>Deadline: ${task.deadline}</p>
+            `;
+            taskListElement.appendChild(taskElement);
         });
+    } else {
+        alert('Erreur lors du chargement des tâches');
+    }
+}
+
+// Sélectionner le formulaire de tâche
+const taskForm = document.getElementById('task-form');
+
+// Soumettre une nouvelle tâche
+taskForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const taskName = document.getElementById('task-name').value;
+    const taskDesc = document.getElementById('task-desc').value;
+    const taskDeadline = document.getElementById('task-deadline').value;
+
+    if (!taskName || !taskDesc || !taskDeadline) {
+        alert("Veuillez remplir tous les champs");
+        return;
     }
 
-    function addTaskToLocalStorage(name, desc, deadline) {
-        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        const id = new Date().getTime(); // Utiliser l'heure actuelle comme ID
-        const newTask = { id, name, desc, deadline };
-        tasks.push(newTask);
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-        addTaskToDOM(name, desc, deadline, id);
-        clearForm();
-        showMessage('Tâche ajoutée avec succès', 'success');
-    }
-
-    function addTaskToDOM(name, desc, deadline, id) {
-        const taskCard = document.createElement('div');
-        taskCard.classList.add('task-card');
-        taskCard.dataset.id = id;
-
-        taskCard.innerHTML = `
-            <div>
-                <h3>${name}</h3>
-                <p><strong>Description:</strong> ${desc}</p>
-                <p><strong>Date limite:</strong> ${deadline}</p>
-            </div>
-            <button>Supprimer</button>
-        `;
-
-        taskCard.querySelector('button').addEventListener('click', () => {
-            removeTaskFromLocalStorage(id);
-            taskList.removeChild(taskCard);
-            showMessage('Tâche supprimée avec succès', 'success');
+    try {
+        // Envoi des données de la tâche avec le token d'authentification
+        const response = await fetch(`${backendUrl}/api/tasks`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}` // Envoi du token dans l'en-tête
+            },
+            body: JSON.stringify({ name: taskName, description: taskDesc, deadline: taskDeadline })
         });
 
-        taskList.appendChild(taskCard);
+        if (response.ok) {
+            const data = await response.json();
+            alert("Tâche ajoutée avec succès !");
+            loadTasks(); // Recharger la liste des tâches après ajout
+        } else {
+            const errorData = await response.json();
+            alert('Erreur lors de l\'ajout de la tâche : ' + (errorData.message || 'Erreur inconnue'));
+        }
+    } catch (error) {
+        alert('Erreur de connexion au serveur');
     }
+});
 
-    function removeTaskFromLocalStorage(id) {
-        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        const updatedTasks = tasks.filter(task => task.id !== id);
-        localStorage.setItem('tasks', JSON.stringify(updatedTasks));
-    }
-
-    function clearForm() {
-        document.getElementById('task-name').value = '';
-        document.getElementById('task-desc').value = '';
-        document.getElementById('task-deadline').value = '';
-    }
-
-    function showMessage(message, type) {
-        successMessage.textContent = message;
-        successMessage.className = type;
-        successMessage.style.display = 'block';
-        setTimeout(() => {
-            successMessage.style.display = 'none';
-        }, 3000);
-    }
+// Charger les tâches et les informations de l'utilisateur au démarrage de la page
+window.addEventListener('DOMContentLoaded', () => {
+    fetchUserData(); // Charger les informations de l'utilisateur
+    loadTasks();     // Charger les tâches de l'utilisateur
 });
