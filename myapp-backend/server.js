@@ -59,7 +59,10 @@ app.post('/api/register', (req, res) => {
       console.error('Erreur lors de l\'insertion dans la base de données:', err);
       return res.status(500).json({ error: 'Erreur serveur' });
     }
-    res.status(201).json({ message: 'Utilisateur inscrit avec succès' });
+
+    // Génération du token JWT
+    const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, SECRET_KEY, { expiresIn: '1h' });
+    res.status(201).json({ token, message: 'Utilisateur inscrit avec succès' });
   });
 });
 
