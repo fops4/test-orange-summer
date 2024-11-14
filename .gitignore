@@ -1,3 +1,4 @@
 node_modules/
 dist/
 myapp-backend\node_modules/
+myapp-backend\.env

@@ -23,5 +23,8 @@
     "linux": {
       "target": "AppImage"
     }
+  },
+  "dependencies": {
+    "semver": "^7.6.3"
   }
 }
