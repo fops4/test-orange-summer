@@ -1,8 +1,14 @@
-// api.js
 const backendUrl = 'http://localhost:3000'; // Modifier selon votre environnement
 let authToken = localStorage.getItem('authToken');
 
-// Fonctions d'API pour la connexion, inscription, et réinitialisation du mot de passe
+// Fonction pour ajouter le token aux requêtes
+function getAuthHeaders() {
+    return {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`,
+    };
+}
+
 async function login(email, password) {
     const response = await fetch(`${backendUrl}/api/login`, {
         method: 'POST',
@@ -31,7 +37,7 @@ async function register(name, email, password) {
 async function resetPassword(email, newPassword) {
     const response = await fetch(`${backendUrl}/api/reset-password`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
         body: JSON.stringify({ email, newPassword })
     });
     if (!response.ok) throw await response.json();

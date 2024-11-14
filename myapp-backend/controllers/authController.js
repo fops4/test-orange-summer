@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const db = require('../config/db'); // Import de la connexion à la base de données
+const { createToken } = require('../routes/authMiddleware');
 
 // Contrôleur d'inscription
 exports.register = async (req, res) => {
@@ -18,11 +19,32 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
     const { email, password } = req.body;
     const sql = 'SELECT * FROM users WHERE email = ?';
+    
     db.query(sql, [email], (err, results) => {
         if (err || results.length === 0 || !bcrypt.compareSync(password, results[0].password)) {
             return res.status(401).json({ error: 'Email ou mot de passe incorrect' });
         }
-        res.status(200).json({ message: 'Connecté avec succès' });
+
+        // Récupération des informations utilisateur
+        const user = results[0];
+        console.log("Informations utilisateur récupérées :", user); // Affichage des informations utilisateur dans la console
+
+        // Création du token après vérification réussie
+        const token = createToken({
+            login: email,
+            role: 'user',  // ou autre rôle selon votre application
+            id: user.id,  // ajoutez l'ID utilisateur pour le payload du token
+        });
+
+        // Affichage du token dans la console
+        console.log("Token généré :", token);
+
+        // Renvoi du token dans la réponse
+        res.status(200).json({ 
+            message: 'Connecté avec succès',
+            token: token,
+            user: { id: user.id, name: user.name, email: email } // informations utilisateur
+        });
     });
 };
 
